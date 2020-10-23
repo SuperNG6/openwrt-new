@@ -42,7 +42,7 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq  install unzip wget 
+        sudo -E apt-get -qq install unzip wget 
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
@@ -52,12 +52,13 @@ jobs:
       run: |
         wget https://github.com/v2fly/v2ray-core/releases/download/v4.31.3/v2ray-linux-arm64-v8a.zip
         unzip v2ray-linux-arm64-v8a.zip
-        upx --lzma --ultra-brute v2ray v2ctl
 
-    - name: UPX 2ray v2ray
+    - name: UPX v2ray v2ray
       id: upx
       working-directory: /workdir
       run: |
+        cd v2ray-linux-arm64-v8a
+        chmod +x v2ray v2ctl 
         upx --lzma --ultra-brute v2ray v2ray
         echo "::set-output name=status::success"
 
