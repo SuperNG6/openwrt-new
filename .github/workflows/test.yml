@@ -59,6 +59,7 @@ jobs:
         echo "::set-output name=status::success"
 
     - name: Upload firmware to release
+    
       uses: softprops/action-gh-release@v1
       if: steps.tag.outputs.status == 'success' && !cancelled()
       env:
@@ -67,8 +68,8 @@ jobs:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: |
-          AMD.5500XT+IGPU.iMac19.1.zip
-          AMD.GPU+IGPU.iMac19.1.zip
-          ONLY.AMD.GPU.iMacPro1.1.zip
-          ONLY.IGPU.Macmini8.1.zip
+          $GITHUB_WORKSPACE/hackintosh/AMD.5500XT+IGPU.iMac19.1.zip
+          $GITHUB_WORKSPACE/hackintosh/AMD.GPU+IGPU.iMac19.1.zip
+          $GITHUB_WORKSPACE/hackintosh/ONLY.AMD.GPU.iMacPro1.1.zip
+          $GITHUB_WORKSPACE/hackintosh/ONLY.IGPU.Macmini8.1.zip
 
