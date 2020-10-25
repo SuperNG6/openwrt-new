@@ -16,7 +16,7 @@ env:
   REPO_URL: https://github.com/SuperNG6/MSI-B360-Catalina-EFI
   REPO_BRANCH: master
   CONFIG_FILE: .config
-  UPLOAD_RELEASE: false
+  UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
 jobs:
@@ -45,10 +45,10 @@ jobs:
     - name: Packaging EFI
       run: |
         cd $GITHUB_WORKSPACE/hackintosh
-        zip -r AMD.5500XT+IGPU.iMac19.1.zip ./AMD\ 5500XT+IGPU\ \(iMac19\,1\)/
-        zip -r AMD.GPU+IGPU.iMac19.1.zip ./AMD\ GPU+IGPU\ \(iMac19\,1\)
-        zip -r ONLY.AMD.GPU.iMacPro1.1.zip ./ONLY\ AMD\ GPU\ \(iMacPro1\,1\)
-        zip -r ONLY.IGPU.Macmini8.1.zip ./ONLY\ IGPU\ \(Macmini8\,1\)
+        zip -rq AMD.5500XT+IGPU.iMac19.1.zip ./AMD\ 5500XT+IGPU\ \(iMac19\,1\)/
+        zip -rq AMD.GPU+IGPU.iMac19.1.zip ./AMD\ GPU+IGPU\ \(iMac19\,1\)
+        zip -rq ONLY.AMD.GPU.iMacPro1.1.zip ./ONLY\ AMD\ GPU\ \(iMacPro1\,1\)
+        zip -rq ONLY.IGPU.Macmini8.1.zip ./ONLY\ IGPU\ \(Macmini8\,1\)
 
     - name: Generate release tag
       id: tag
