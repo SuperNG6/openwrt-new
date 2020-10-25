@@ -53,7 +53,7 @@ jobs:
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
         echo "TAG=$(cat ReleaseTag | head -n1)"
-        echo "EFI_VER=$TAG" >> $GITHUB_ENV
+        echo "::set-output name=release_tag::$TAG"
         echo "::set-output name=status::success"
 
     - name: Upload EFI to release
@@ -62,7 +62,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.EFI_VER }}
+        tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: Changelog
         files: |
           ${{ env.EFI_PATH }}/*.zip
