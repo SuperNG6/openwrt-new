@@ -54,7 +54,7 @@ jobs:
         wget https://github.com/v2fly/v2ray-core/releases/download/v4.31.3/v2ray-linux-arm64-v8a.zip
         unzip -d /workdir/v2ray-linux-arm64-v8a v2ray-linux-arm64-v8a.zip
         cd /workdir/v2ray-linux-arm64-v8a
-        sudo hmod +x v2ray v2ctl 
+        sudo chmod +x v2ray v2ctl 
         sudo upx --lzma --ultra-brute v2ray v2ray
         echo "::set-output name=status::success"
 
