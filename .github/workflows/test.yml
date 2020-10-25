@@ -52,7 +52,6 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "TAG=$(cat ReleaseTag | head -n1)"
         echo "::set-output name=release_tag::$(cat ReleaseTag)"
         echo "::set-output name=status::success"
 
