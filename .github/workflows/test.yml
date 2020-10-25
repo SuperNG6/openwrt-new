@@ -59,9 +59,10 @@ jobs:
         echo "::set-output name=status::success"
 
     - name: Upload firmware to release
-    
       uses: softprops/action-gh-release@v1
       if: steps.tag.outputs.status == 'success' && !cancelled()
+      run: |
+        $PWD
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
