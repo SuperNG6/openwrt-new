@@ -68,6 +68,4 @@ jobs:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: |
-          files: ${{ env.EFI_PATH }}/*.zip
-
-
+          ${{ env.EFI_PATH }}/*.zip
