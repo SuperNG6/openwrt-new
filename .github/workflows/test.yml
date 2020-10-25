@@ -48,6 +48,7 @@ jobs:
         zip -rq AMD.GPU+IGPU.iMac19.1.zip ./AMD\ GPU+IGPU\ \(iMac19\,1\)
         zip -rq ONLY.AMD.GPU.iMacPro1.1.zip ./ONLY\ AMD\ GPU\ \(iMacPro1\,1\)
         zip -rq ONLY.IGPU.Macmini8.1.zip ./ONLY\ IGPU\ \(Macmini8\,1\)
+        ls -l
 
     - name: Generate release tag
       id: tag
