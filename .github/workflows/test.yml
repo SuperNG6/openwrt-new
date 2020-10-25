@@ -5,10 +5,8 @@ name: test
 
 on:
   push:
-    branches:
-      - 'main'
-    paths-ignore:
-      - "README.md"
+    paths:
+      - "ReleaseTag"
   repository_dispatch:
   workflow_dispatch:
 
@@ -37,7 +35,6 @@ jobs:
     - name: Clone source code
       working-directory: /tmp
       run: |
-        df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH hackintosh
         ln -sf /tmp/hackintosh $GITHUB_WORKSPACE/hackintosh
         echo "EFI_PATH=$GITHUB_WORKSPACE/hackintosh" >> $GITHUB_ENV
@@ -55,8 +52,8 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
-        touch release.txt
+        echo "TAG=$(cat ReleaseTag | head -n1)"
+        echo "::set-output name=release_tag::$TAG
         echo "::set-output name=status::success"
 
     - name: Upload EFI to release
@@ -66,6 +63,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
+        body_path: Changelog
         files: |
           ${{ env.EFI_PATH }}/*.zip
