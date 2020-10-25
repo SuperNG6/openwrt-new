@@ -1,0 +1,69 @@
+# GitHub Action Release
+# MSI-B360-Catalina-EFI
+
+name: test
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths-ignore:
+      - "README.md"
+  repository_dispatch:
+  workflow_dispatch:
+
+env:
+  REPO_URL: https://github.com/SuperNG6/MSI-B360-Catalina-EFI
+  REPO_BRANCH: master
+  CONFIG_FILE: .config
+  UPLOAD_RELEASE: false
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq install git wget unzip
+        sudo timedatectl set-timezone "$TZ"
+
+    - name: Clone source code
+      working-directory: /tmp
+      run: |
+        df -hT $PWD
+        git clone $REPO_URL -b $REPO_BRANCH hackintosh
+        ln -sf /tmp/hackintosh $GITHUB_WORKSPACE/hackintosh
+
+    - name: Packaging EFI
+      run: |
+        cd $GITHUB_WORKSPACE/hackintosh
+        zip -r AMD.5500XT+IGPU.iMac19.1.zip ./AMD\ 5500XT+IGPU\ \(iMac19\,1\)/
+        zip -r AMD.GPU+IGPU.iMac19.1.zip ./AMD\ GPU+IGPU\ \(iMac19\,1\)
+        zip -r ONLY.AMD.GPU.iMacPro1.1.zip ./ONLY\ AMD\ GPU\ \(iMacPro1\,1\)
+        zip -r ONLY.IGPU.Macmini8.1.zip ./ONLY\ IGPU\ \(Macmini8\,1\)
+
+    - name: Generate release tag
+      id: tag
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      run: |
+        echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
+        touch release.txt
+        echo "::set-output name=status::success"
+
+    - name: Upload firmware to release
+      uses: softprops/action-gh-release@v1
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
+        files: $GITHUB_WORKSPACE/hackintosh/*.zip
