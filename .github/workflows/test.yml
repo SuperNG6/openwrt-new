@@ -54,6 +54,7 @@ jobs:
       run: |
         echo "::set-output name=release_tag::$(cat ReleaseTag)"
         echo "::set-output name=status::success"
+        cat ReleaseTag
 
     - name: Upload EFI to release
       uses: softprops/action-gh-release@v1
@@ -61,6 +62,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
+        name: MSI-B360-${{ steps.tag.outputs.release_tag }}
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: Changelog
         files: |
