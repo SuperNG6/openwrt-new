@@ -30,19 +30,21 @@ jobs:
         sudo -E apt-get -qq install git wget unzip upx
         sudo timedatectl set-timezone "$TZ"
 
+    - name: Cat V2ray Ver
+      run: |
+        echo "V2RAY_VER=$(cat V2rayReleaseTag)" >> $GITHUB_ENV  
+
     - name: Clone source code
       working-directory: /tmp
       run: |
-        cat V2rayReleaseTag
-        wget https://github.com/v2fly/v2ray-core/releases/download/v$(cat V2rayReleaseTag)/v2ray-linux-arm64-v8a.zip
-        mkdir -p /tmp/v2ray
+        wget https://github.com/v2fly/v2ray-core/releases/download/v${{ env.V2RAY_VER }}/v2ray-linux-arm64-v8a.zip
         unzip v2ray-linux-arm64-v8a.zip -d /tmp/v2ray-linux-arm64-v8a
-        ln -sf /tmp/v2ray-linux-arm64-v8a $GITHUB_WORKSPACE/v2ray
+        ln -sf /tmp/v2ray-linux-arm64-v8a $GITHUB_WORKSPACE/v2ray-linux-arm64-v8a
         echo "BIN_PATH=$GITHUB_WORKSPACE/v2ray-linux-arm64-v8a" >> $GITHUB_ENV
 
-    - name: Packaging EFI
+    - name: UPX BIN
       run: |
-        cd $GITHUB_WORKSPACE/v2ray
+        cd $GITHUB_WORKSPACE/v2ray-linux-arm64-v8a
         ls -l
         upx -k --lzma --ultra-brute v2ray v2ray
         ls -l
