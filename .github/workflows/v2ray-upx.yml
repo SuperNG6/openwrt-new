@@ -40,6 +40,7 @@ jobs:
       run: |
         wget -q https://github.com/v2fly/v2ray-core/releases/download/v${{ env.V2RAY_VER }}/v2ray-linux-arm64-v8a.zip
         unzip v2ray-linux-arm64-v8a.zip -d /tmp/v2ray-linux-arm64-v8a
+        rm -f v2ray-linux-arm64-v8a.zip
         ls -l /tmp/v2ray-linux-arm64-v8a
         ln -sf /tmp/v2ray-linux-arm64-v8a $GITHUB_WORKSPACE/v2ray-linux-arm64-v8a
         ls -l $GITHUB_WORKSPACE/v2ray-linux-arm64-v8a
@@ -49,7 +50,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/v2ray-linux-arm64-v8a
         ls -l
-        upx -k --lzma --ultra-brute v2ray v2ray
+        upx -k --lzma --ultra-brute v2ray v2ctl
         ls -l
         zip -rq v2ray-linux-arm64-v8a.zip ./v2ray-linux-arm64-v8a/
         ls -l
