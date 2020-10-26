@@ -32,14 +32,17 @@ jobs:
 
     - name: Cat V2ray Ver
       run: |
-        echo "V2RAY_VER=$(cat V2rayReleaseTag)" >> $GITHUB_ENV  
+        echo "V2RAY_VER=$(cat V2rayReleaseTag)" >> $GITHUB_ENV
+        cat V2rayReleaseTag  
 
     - name: Clone source code
       working-directory: /tmp
       run: |
-        wget https://github.com/v2fly/v2ray-core/releases/download/v${{ env.V2RAY_VER }}/v2ray-linux-arm64-v8a.zip
+        wget -q https://github.com/v2fly/v2ray-core/releases/download/v${{ env.V2RAY_VER }}/v2ray-linux-arm64-v8a.zip
         unzip v2ray-linux-arm64-v8a.zip -d /tmp/v2ray-linux-arm64-v8a
+        ls -l /tmp/v2ray-linux-arm64-v8a
         ln -sf /tmp/v2ray-linux-arm64-v8a $GITHUB_WORKSPACE/v2ray-linux-arm64-v8a
+        ls -l $GITHUB_WORKSPACE/v2ray-linux-arm64-v8a
         echo "BIN_PATH=$GITHUB_WORKSPACE/v2ray-linux-arm64-v8a" >> $GITHUB_ENV
 
     - name: UPX BIN
