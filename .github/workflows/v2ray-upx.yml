@@ -1,0 +1,79 @@
+# GitHub Action Release
+# MSI-B360-Catalina-EFI
+
+name: v2ray-upx
+
+on:
+  push:
+    paths:
+      - "V2rayReleaseTag"
+  repository_dispatch:
+  workflow_dispatch:
+
+env:
+  REPO_URL: https://github.com/v2fly/v2ray-core/releases/download/v4.31.3/v2ray-linux-arm64-v8a.zip
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq install git wget unzip upx
+        sudo timedatectl set-timezone "$TZ"
+
+    - name: Clone source code
+      working-directory: /tmp
+      run: |
+        wget https://github.com/v2fly/v2ray-core/releases/download/v$(cat V2rayReleaseTag)/v2ray-linux-arm64-v8a.zip
+        mkdir -p /tmp/v2ray
+        unzip v2ray-linux-arm64-v8a.zip -d /tmp/v2ray-linux-arm64-v8a
+        ln -sf /tmp/v2ray-linux-arm64-v8a $GITHUB_WORKSPACE/v2ray
+        echo "BIN_PATH=$GITHUB_WORKSPACE/v2ray-linux-arm64-v8a" >> $GITHUB_ENV
+
+    - name: Packaging EFI
+      run: |
+        cd $GITHUB_WORKSPACE/v2ray
+        ls -l
+        upx -k --lzma --ultra-brute v2ray v2ray
+        ls -l
+        zip -rq v2ray-linux-arm64-v8a.zip ./v2ray-linux-arm64-v8a/
+        ls -l
+
+    - name: Generate release tag
+      id: tag
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      run: |
+        echo "::set-output name=release_tag::$(cat V2rayReleaseTag)"
+        echo "::set-output name=status::success"
+        cat ReleaseTag
+
+    - name: Upload BIN to release
+      uses: softprops/action-gh-release@v1
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: v2ray-${{ steps.tag.outputs.release_tag }}
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: Changelog
+        files: |
+          ${{ env.BIN_PATH }}/*.zip
+
+    # - name: Remove old Releases
+    #   uses: dev-drprasad/delete-older-releases@v0.1.0
+    #   if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+    #   with:
+    #     keep_latest: 1
+    #     delete_tags: true
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
