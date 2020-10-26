@@ -30,12 +30,6 @@ jobs:
         sudo -E apt-get -qq install git wget unzip upx
         sudo timedatectl set-timezone "$TZ"
 
-    - name: Determine version
-      run: |
-        cat V2rayReleaseTag 
-        wget --no-check-certificate -qO- https://api.github.com/repos/v2fly/v2ray-core/tags | grep 'name' | cut -d\" -f4 | head -1 > V2rayReleaseTag
-        cat V2rayReleaseTag  
-        cat V2rayReleaseTag  
 
     - name: Get v2ray version
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
@@ -43,7 +37,6 @@ jobs:
         echo "V2RAY_VER=$(cat V2rayReleaseTag)" >> $GITHUB_ENV
         cat V2rayReleaseTag 
         wget --no-check-certificate -qO- https://api.github.com/repos/v2fly/v2ray-core/tags | grep 'name' | cut -d\" -f4 | head -1 > V2rayReleaseTag
-        cat V2rayReleaseTag  
         cat V2rayReleaseTag  
 
     - name: Clone source code
