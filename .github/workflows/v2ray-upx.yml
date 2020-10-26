@@ -59,7 +59,7 @@ jobs:
       run: |
         echo "::set-output name=release_tag::$(cat V2rayReleaseTag)"
         echo "::set-output name=status::success"
-        cat ReleaseTag
+        cat V2rayReleaseTag
 
     - name: Upload BIN to release
       uses: softprops/action-gh-release@v1
