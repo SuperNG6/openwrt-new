@@ -1,0 +1,44 @@
+# GitHub Action Release
+# MSI-B360-Catalina-EFI
+
+name: v2ray-ver
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 8 * * 5
+
+env:
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo timedatectl set-timezone "$TZ"
+
+    - name: Get v2ray ver
+      run: |
+        cat V2rayReleaseTag 
+        wget --no-check-certificate -qO- https://api.github.com/repos/v2fly/v2ray-core/tags | grep 'name' | cut -d\" -f4 | head -1 > V2rayReleaseTag
+        echo "V2RAY_VER=$(cat V2rayReleaseTag)" >> $GITHUB_ENV
+        cat V2rayReleaseTag  
+
+
+    # - name: Remove old Releases
+    #   uses: dev-drprasad/delete-older-releases@v0.1.0
+    #   if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+    #   with:
+    #     keep_latest: 1
+    #     delete_tags: true
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
