@@ -28,11 +28,24 @@ jobs:
       run: |
         sudo -E apt-get -qq update
         sudo -E apt-get -qq install git wget unzip upx
+        sudo -E apt-get -qq upgrade git wget unzip upx
         sudo timedatectl set-timezone "$TZ"
 
-    - name: Cat V2ray Ver
+    - name: Determine version
       run: |
         echo "V2RAY_VER=$(cat V2rayReleaseTag)" >> $GITHUB_ENV
+        cat V2rayReleaseTag 
+        wget --no-check-certificate -qO- https://api.github.com/repos/v2fly/v2ray-core/tags | grep 'name' | cut -d\" -f4 | head -1 > V2rayReleaseTag
+        cat V2rayReleaseTag  
+        cat V2rayReleaseTag  
+
+    - name: Get v2ray version
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+      run: |
+        echo "V2RAY_VER=$(cat V2rayReleaseTag)" >> $GITHUB_ENV
+        cat V2rayReleaseTag 
+        wget --no-check-certificate -qO- https://api.github.com/repos/v2fly/v2ray-core/tags | grep 'name' | cut -d\" -f4 | head -1 > V2rayReleaseTag
+        cat V2rayReleaseTag  
         cat V2rayReleaseTag  
 
     - name: Clone source code
@@ -41,7 +54,6 @@ jobs:
         wget -q https://github.com/v2fly/v2ray-core/releases/download/v${{ env.V2RAY_VER }}/v2ray-linux-arm64-v8a.zip
         unzip v2ray-linux-arm64-v8a.zip -d /tmp/v2ray-linux-arm64-v8a
         rm -f v2ray-linux-arm64-v8a.zip
-        ls -l /tmp/v2ray-linux-arm64-v8a
         ln -sf /tmp/v2ray-linux-arm64-v8a $GITHUB_WORKSPACE/v2ray-linux-arm64-v8a
         ls -l $GITHUB_WORKSPACE/v2ray-linux-arm64-v8a
         echo "BIN_PATH=$GITHUB_WORKSPACE/v2ray-linux-arm64-v8a" >> $GITHUB_ENV
@@ -50,7 +62,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/v2ray-linux-arm64-v8a
         ls -l
-        upx -k --lzma --ultra-brute v2ray v2ctl
+        upx --lzma --ultra-brute v2ray v2ctl
         ls -l
         zip -rq v2ray-linux-arm64-v8a.zip ./
         ls -l
@@ -71,7 +83,7 @@ jobs:
       with:
         name: v2ray-${{ steps.tag.outputs.release_tag }}
         tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: Changelog
+        # body_path: Changelog
         files: |
           ${{ env.BIN_PATH }}/*.zip
 
