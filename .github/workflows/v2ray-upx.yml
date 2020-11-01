@@ -72,6 +72,8 @@ jobs:
         # body_path: Changelog
         files: |
           ${{ env.BIN_PATH }}/*.zip
+          ${{ env.BIN_PATH }}/v2ray
+          ${{ env.BIN_PATH }}/v2ctl
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@v0.1.0
