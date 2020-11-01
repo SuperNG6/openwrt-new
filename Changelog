@@ -1,7 +1,19 @@
-1、update OpenCorePkg 0.5.5 & AppleALC 1.4.6 & VirtualSMC 1.1.1
-2、remove slide value,now support more motherboard (z390,b360 b365 ....)
-3、set the default recovery language to zh-Hant
-4、support native nvram for 300-series chipsets
-5、added TakeoffDelay value(200) for improved action hotkey support
-6、add NvramReset options at boot
-7、support macOS Catalina 10.15.3
+Features
+
+V2Ray loads JSON internally by default @forever8938
+Refine UNIX domain socket @lucifer9
+https://www.v2fly.org/config/inbounds.html
+Fixes
+
+Fix mKCP sending window @p4gefau1t
+Fix JSON parsing dependency introduced by mutijson config @xiaokangwang
+Fix proto.go ProtoFilesUsingProtocGenGoFast on Windows @JimhHan
+Chores
+
+Update geoip, geosite, dependencies
+Refine vprotogen & Regenerate .pb.go files @Loyalsoldier
+Notice
+
+Compiling v2ray-core requires Go 1.15+
+Now v2ray-core supports Reproducible Builds
+https://github.com/v2fly/reproducible-builds
