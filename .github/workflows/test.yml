@@ -64,6 +64,7 @@ jobs:
       with:
         name: MSI-B360-${{ steps.tag.outputs.release_tag }}-EFI
         tag_name: ${{ steps.tag.outputs.release_tag }}
+        prerelease: true
         body_path: Changelog
         files: |
           ${{ env.EFI_PATH }}/*.zip
