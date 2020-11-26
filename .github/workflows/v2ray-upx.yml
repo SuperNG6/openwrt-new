@@ -1,15 +1,11 @@
-# GitHub Action Release
-# MSI-B360-Catalina-EFI
-
 name: v2ray-upx
 
 on:
   push:
     paths:
-      - "V2rayReleaseTag"
-  repository_dispatch:
+      - "ReleaseTag"
   workflow_dispatch:
-
+  
 env:
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
@@ -38,7 +34,7 @@ jobs:
     - name: Clone source code
       working-directory: /tmp
       run: |
-        wget -q https://github.com/v2fly/v2ray-core/releases/download/v${{ env.V2RAY_VER }}/v2ray-linux-arm64-v8a.zip
+        wget -q https://github.com/v2fly/v2ray-core/releases/download/v$(cat ReleaseTag | head -n1)/v2ray-linux-arm64-v8a.zip
         unzip v2ray-linux-arm64-v8a.zip -d /tmp/v2ray-linux-arm64-v8a
         rm -f v2ray-linux-arm64-v8a.zip
         ls -l /tmp/v2ray-linux-arm64-v8a
