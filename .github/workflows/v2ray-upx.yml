@@ -54,7 +54,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "::set-output name=release_tag::$(cat V2rayReleaseTag)"
+        echo "::set-output name=release_tag::$(cat ReleaseTag | head -n1)"
         echo "::set-output name=status::success"
         cat V2rayReleaseTag
 
@@ -72,11 +72,11 @@ jobs:
           ${{ env.BIN_PATH }}/v2ray
           ${{ env.BIN_PATH }}/v2ctl
 
-    - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.1.0
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      with:
-        keep_latest: 1
-        delete_tags: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Remove old Releases
+    #   uses: dev-drprasad/delete-older-releases@v0.1.0
+    #   if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+    #   with:
+    #     keep_latest: 1
+    #     delete_tags: true
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
