@@ -178,7 +178,7 @@ jobs:
         files: ${{ env.FIRMWARE }}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk
 
     - name: Remove old Artifacts
-      uses: c-hive/gha-remove-artifacts@v1.2.0
+      uses: c-hive/gha-remove-artifacts@v1.4.0
       with:
         age: '1 day'
         skip-recent: 3
